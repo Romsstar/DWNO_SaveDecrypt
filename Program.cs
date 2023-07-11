@@ -14,9 +14,9 @@ namespace DWNO_SaveDecrypt
             byte[] iv = Encoding.UTF8.GetBytes("keiv92lgpz0glske");
             byte[] input;
             byte[] output;
+            int checksumPos=0x1A;
 
-
-            if (args.Length == 0||args[0]=="-help")
+            if (args.Length == 0 || args[0] == "-help")
             {
                 Console.WriteLine("Usage:");
                 Console.WriteLine("DWNOSave.exe -input <input file path> (-encrypt | -decrypt) -output <output file path>");
@@ -39,6 +39,7 @@ namespace DWNO_SaveDecrypt
                 input = File.ReadAllBytes(args[0]);
                 filePath = Path.GetFileName(args[0]);
 
+
                 bool canDecrypt = CanDecrypt(input, key, iv);
                 if (canDecrypt)
                 {
@@ -51,10 +52,14 @@ namespace DWNO_SaveDecrypt
                 else
                 {
                     // Encrypt the input file
+                    ClearChecksum(input, checksumPos);
+                    GetChecksum(input);
+                    WriteChecksum(input, checksumPos);
                     output = Encrypt(input, key, iv);
                     File.WriteAllBytes(filePath, output);
                     Console.WriteLine("Savefile was encrypted!");
                     Console.Read();
+
                 }
             }
             else if (args[0] == "-input" && (args[2] == "-encrypt" || args[2] == "-decrypt") && args[3] == "-output")
@@ -76,8 +81,10 @@ namespace DWNO_SaveDecrypt
                     output = Decrypt(input, key, iv);
                     File.WriteAllBytes(outputPath, output);
                 }
-            }
+
+             }
         }
+
 
 
         public static bool CanDecrypt(byte[] data, byte[] key, byte[] iv)
@@ -106,23 +113,62 @@ namespace DWNO_SaveDecrypt
                 return encryptedData;
             }
         }
+        public static void ClearChecksum(byte[] data, int checksumPos)
+        {
+            if (checksumPos < data.Length && data[checksumPos] != 0)
+            {
+                using (MemoryStream output = new MemoryStream(data))
+                {
+                    using (BinaryWriter binaryWriter = new BinaryWriter(output))
+                    {
+                        binaryWriter.Seek(checksumPos, SeekOrigin.Begin);
+                        binaryWriter.Write(0);
+                    }
+                }
+            }
+        }
+
+        public static uint WriteChecksum(byte[] data, int checksumPos)
+        {
+            int checksum = GetChecksum(data);
+            using (MemoryStream output = new MemoryStream(data))
+            {
+                using (BinaryWriter binaryWriter = new BinaryWriter(output))
+                {
+                    binaryWriter.Seek(checksumPos, SeekOrigin.Begin);
+                    binaryWriter.Write(checksum);
+                    return (uint)(checksumPos - binaryWriter.BaseStream.Position);
+                }
+            }
+        }
+
+
+        public static int GetChecksum(byte[] _data)
+        {
+            int num = 0;
+            for (int i = 0; i < _data.Length; i++)
+            {
+                num += _data[i];
+            }
+            return num;
+        }
+
         public static byte[] Decrypt(byte[] data, byte[] key, byte[] iv)
         {
             byte[] result;
             AesManaged aesManaged = new AesManaged();
             aesManaged.Key = key;
             aesManaged.IV = iv;
-           
-                ICryptoTransform decryptor = aesManaged.CreateDecryptor();
-                result = decryptor.TransformFinalBlock(data, 0, data.Length);
-                return result;
+
+            ICryptoTransform decryptor = aesManaged.CreateDecryptor();
+            result = decryptor.TransformFinalBlock(data, 0, data.Length);
+            return result;
         }
     }
 }
 
-        
-                
-            
+
+
 
 
 

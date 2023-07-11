@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DWNOSave", "DWNOSave.csproj", "{767BD181-9B95-4A67-BDF5-F9C9C222668D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DWNO_SaveDecrypt", "DWNO_SaveDecrypt.csproj", "{767BD181-9B95-4A67-BDF5-F9C9C222668D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
