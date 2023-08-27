@@ -2,8 +2,9 @@
 This tool can decrypt and re-encrypt Savegames from Digimon World Next Order.
 The game has a checksum which is written when the savegame is re-encrypted, allowing for Savegame Modification.
 In addition you can resign the Savegame to another Steam ID. It has two approaches for that:
-It will look for any existing Savedata on your computer and identify the SteamID associated with them. This will be useful if you got a Savegame from the internet and wish 
-to use it. Alternatively it allows for user Input so you can resign it to any other SteamID you wish. 
+It will look for any existing Savedata on your computer and identify the SteamID associated with them. (Windows only)
+This will be useful if you got a Savegame from the internet and wish to use it. 
+Alternatively it allows for user Input so you can resign it to any other SteamID you wish. 
 
 # Usage
 The tool is Command Line Input and works with arguments. 
