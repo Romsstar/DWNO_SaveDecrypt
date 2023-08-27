@@ -22,14 +22,16 @@ namespace DWNO_SaveDecrypt
             {
                 Console.WriteLine("Usage:");
                 Console.WriteLine("DWNO_SaveDecrypt.exe --input/-i <input file path> (--encrypt/-e | --decrypt/-d) --output/-o <output file path>");
+                Console.WriteLine("Alternatively: DWNO_SaveDecrypt.exe <input file path> (--encrypt/-e | --decrypt/-d) <output file path>");
                 Console.WriteLine();
                 Console.WriteLine("Options:");
-                Console.WriteLine("  --input    -i   The path to the input file to encrypt or decrypt.");
+                Console.WriteLine("  --input    -i   Input file to encrypt/decrypt. (Optional)");
                 Console.WriteLine("  --encrypt  -e   Encrypt the input file.");
                 Console.WriteLine("  --decrypt  -d   Decrypt the input file.");
                 Console.WriteLine("  --help     -h   Display this usage information.");
-                Console.WriteLine("  --output   -o   The path to the output file to create.");
+                Console.WriteLine("  --output   -o   Output file to create.(Optional)");
                 Console.WriteLine();
+                Console.WriteLine("Please make sure to follow the specified order of the arguments. The -i and -o arguments are optional, but the actual paths/filenames are not.");
                 Console.Read();
                 return;
             }
@@ -86,14 +88,14 @@ namespace DWNO_SaveDecrypt
                 input = File.ReadAllBytes(inputPath);
                 var canDecrypt = CanDecrypt(input, key, iv);
                 var outputPath = args[4];
-                if (args[2] == "-encrypt" || args[2] == "-e")
+                if (args[2] == "--encrypt" || args[2] == "-e")
                 {
                     // Encrypt the input file
                     output = Encrypt(input, key, iv);
                     File.WriteAllBytes(outputPath, output);
                 }
 
-                if (args[2] == "-decrypt" || args[2] == "-d")
+                if (args[2] == "--decrypt" || args[2] == "-d")
                 {
                     // Decrypt the input file
                     output = Decrypt(input, key, iv);
