@@ -14,21 +14,21 @@ namespace DWNO_SaveDecrypt
             var iv = Encoding.UTF8.GetBytes("keiv92lgpz0glske");
             byte[] input;
             byte[] output;
-            string steamID = null;
+            string steamId = null;
             var checksumPos = 0x1A;
-            var SteamIdPos = 0x9;
+            var steamIdPos = 0x9;
 
-            if (args.Length == 0 || args[0] == "-help")
+            if (args.Length == 0 || args[0] == "--help" || args[0] == "-h")
             {
                 Console.WriteLine("Usage:");
-                Console.WriteLine("DWNOSave.exe -input <input file path> (-encrypt | -decrypt) -output <output file path>");
+                Console.WriteLine("DWNO_SaveDecrypt.exe --input/-i <input file path> (--encrypt/-e | --decrypt/-d) --output/-o <output file path>");
                 Console.WriteLine();
                 Console.WriteLine("Options:");
-                Console.WriteLine("  -input     The path to the input file to encrypt or decrypt.");
-                Console.WriteLine("  -encrypt   Encrypt the input file.");
-                Console.WriteLine("  -decrypt   Decrypt the input file.");
-                Console.WriteLine("  -help      Display this usage information.");
-                Console.WriteLine("  -output    The path to the output file to create.");
+                Console.WriteLine("  --input    -i   The path to the input file to encrypt or decrypt.");
+                Console.WriteLine("  --encrypt  -e   Encrypt the input file.");
+                Console.WriteLine("  --decrypt  -d   Decrypt the input file.");
+                Console.WriteLine("  --help     -h   Display this usage information.");
+                Console.WriteLine("  --output   -o   The path to the output file to create.");
                 Console.WriteLine();
                 Console.Read();
                 return;
@@ -56,16 +56,17 @@ namespace DWNO_SaveDecrypt
 
                     if (resignChoice.Trim().ToLower() == "y")
                     {
+                        if (GetSteamIDFolder()!= null)
                         Console.WriteLine("Folder with Steam ID " + GetSteamIDFolder() +
                                           " was found. Use it as the new Steam ID?  (y/n):");
                         var userIDChoice = Console.ReadLine();
                         if (userIDChoice.Trim().ToLower() == "y")
                         {
-                            ResignSavegameWithNewSteamID(input, GetSteamIDFolder(), SteamIdPos);
+                            ResignSavegameWithNewSteamID(input, GetSteamIDFolder(), steamIdPos);
                         }
                         else
                         {
-                            ResignSavegameWithNewSteamID(input, steamID, SteamIdPos);
+                            ResignSavegameWithNewSteamID(input, steamId, steamIdPos);
                         }
                     }
 
@@ -79,7 +80,7 @@ namespace DWNO_SaveDecrypt
                     Console.Read();
                 }
             }
-            else if (args[0] == "-input" && (args[2] == "-encrypt" || args[2] == "-decrypt") && args[3] == "-output")
+            else if (args[0] == "--input" || args[0] =="-i" && (args[2] == "--encrypt" || args[2] == "--decrypt" || args[2]=="-d" || args[2]=="-e") && args[3] == "--output" || args[3]=="-o")
             {
                 var inputPath = args[1];
                 input = File.ReadAllBytes(inputPath);
